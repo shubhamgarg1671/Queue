@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="read_our_te">
+        <item name="android:textColor">
+            #FFFCFC
+        </item>
+        <item name="android:textSize">
+            10sp
+        </item>
+    </style>
+</resources>
