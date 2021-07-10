@@ -89,9 +89,9 @@
         android:layout_marginTop="72dp"
         android:inputType="number"
         android:itemBackground="@color/light_green"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         app:OtpItemCount="6"
-        app:OtpLineColor="@color/green"
+        app:OtpLineColor="@color/black"
         app:OtpViewType="line"
         android:layout_gravity="center"
         android:elevation="8dp"
@@ -110,7 +110,7 @@
         android:layout_marginLeft="25dp"
         android:layout_gravity="center"
         android:background="@drawable/signupline"
-        app:layout_constraintBottom_toTopOf="@+id/signInButton"
+        app:layout_constraintBottom_toTopOf="@+id/googleSignInButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/or_textview"
         app:layout_constraintTop_toBottomOf="@+id/button1SigninPage" />
@@ -124,7 +124,7 @@
         android:textColor="#ffff"
         android:textSize="26dp"
         android:elevation="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/signInButton"
+        app:layout_constraintBottom_toTopOf="@+id/googleSignInButton"
         app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/button1SigninPage" />
@@ -136,14 +136,15 @@
         android:layout_gravity="center"
         android:layout_marginRight="25dp"
         android:elevation="100dp"
+        android:outlineSpotShadowColor="@color/black"
         android:background="@drawable/signupline"
-        app:layout_constraintBottom_toTopOf="@+id/signInButton"
+        app:layout_constraintBottom_toTopOf="@+id/googleSignInButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/or_textview"
         app:layout_constraintTop_toBottomOf="@+id/button1SigninPage" />
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/signInButton"
+        android:id="@+id/googleSignInButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
