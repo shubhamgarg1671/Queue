@@ -1,11 +1,24 @@
 package com.example.queue.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.AlarmClock.EXTRA_MESSAGE
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import com.example.queue.R
+import com.example.queue.yourQueueActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,13 +34,14 @@ class tab_2 : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(
@@ -35,7 +49,34 @@ class tab_2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_2, container, false)
+        val view:View = inflater.inflate(R.layout.fragment_tab_2, container, false)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Database instance
+        val database = FirebaseDatabase.getInstance()
+
+        val createQueueButton:Button = view.findViewById(R.id.createQueueButton)
+        createQueueButton.setOnClickListener {
+            val averageTime = view.findViewById<EditText>(R.id.averageTime).text.toString()
+            val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
+            Log.d(TAG, "createQueueButton clicked with averageTime $averageTime and queueTitile $queueTitile")
+
+            val uid:String = auth.uid!!
+            val currentTimeStamp:String = System.currentTimeMillis().toString()
+            val queueID:String = uid + currentTimeStamp
+            // Database reference
+            var myRef = database.getReference("queue/$queueID/queueTitile")
+            myRef.setValue(queueTitile)
+            myRef = database.getReference("queue/$queueID/avarageTime")
+            myRef.setValue(averageTime)
+            val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
+                putExtra(EXTRA_MESSAGE, queueID)
+            }
+            startActivity(intent)
+        }
     }
 
     companion object {

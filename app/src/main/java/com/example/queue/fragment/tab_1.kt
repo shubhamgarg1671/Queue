@@ -1,10 +1,12 @@
 package com.example.queue.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.example.queue.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -12,6 +14,7 @@ import com.example.queue.R
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+val TAG = "tab1_fragment"
 /**
  * A simple [Fragment] subclass.
  * Use the [tab_1.newInstance] factory method to
@@ -35,7 +38,27 @@ class tab_1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab_1, container, false)
+        val view:View =  inflater.inflate(R.layout.fragment_tab_1, container, false)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val joinQueueButton: Button = view.findViewById(R.id.joinQueueButton)
+        inQueueUpdateUI()
+        noQueueUpdateUI()
+        joinQueueButton.setOnClickListener {
+            Log.d(TAG, "joinQueueButton clicked")
+
+        }
+    }
+
+    private fun noQueueUpdateUI() {
+        Log.d(TAG, "noQueueUpdateUI() called")
+    }
+
+    private fun inQueueUpdateUI() {
+        Log.d(TAG, "inQueueUpdateUI() called")
     }
 
     companion object {

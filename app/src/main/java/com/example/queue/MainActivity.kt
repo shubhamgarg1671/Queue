@@ -3,6 +3,7 @@ package com.example.queue
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.viewpager.widget.ViewPager
 import com.example.queue.adapter.viewPagerAdapter
 import com.google.android.material.tabs.TabItem
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate() called with: savedInstanceState = $savedInstanceState")
-//        FirebaseAuth.getInstance().signOut()
+
 
         val viewPager = findViewById<ViewPager>(R.id.viewPager);
         val viewPagerAdapter = viewPagerAdapter(
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         );
         viewPager.setAdapter(viewPagerAdapter);
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
-
         // It is used to join TabLayout with ViewPager.
         tabLayout.setupWithViewPager(viewPager);
 

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".yourQueueActivity">
+
+    <TextView
+        android:id="@+id/textQueueID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textcurrentTokenYourQueue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:text="Current Token"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textQueueID" />
+
+    <TextView
+        android:id="@+id/cuurentTokenYourQueue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="1"
+        android:textColor="@color/bright_green"
+        android:textSize="50dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textcurrentTokenYourQueue"
+        app:layout_constraintStart_toStartOf="@+id/textcurrentTokenYourQueue"
+        app:layout_constraintTop_toBottomOf="@+id/textcurrentTokenYourQueue" />
+
+    <TextView
+        android:id="@+id/textTotalTokenYourQueue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:text="Total Token"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textQueueID" />
+
+    <TextView
+        android:id="@+id/totalToken"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="10"
+        android:textColor="@color/red"
+        android:textSize="50dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textTotalTokenYourQueue"
+        app:layout_constraintStart_toStartOf="@+id/textTotalTokenYourQueue"
+        app:layout_constraintTop_toBottomOf="@+id/textTotalTokenYourQueue" />
+
+    <Button
+        android:id="@+id/callNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/my_button"
+        android:padding="10dp"
+        android:text="call Next"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/queueFull"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cuurentTokenYourQueue" />
+
+    <Button
+        android:id="@+id/queueFull"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/my_button"
+        android:padding="10dp"
+        android:text="Queue Full"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/callNext"
+        app:layout_constraintTop_toBottomOf="@+id/totalToken" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,6 @@ import com.mukesh.OnOtpCompletionListener
 import com.mukesh.OtpView
 import java.util.concurrent.TimeUnit
 
-
 class signIn : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
