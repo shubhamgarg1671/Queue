@@ -2,12 +2,19 @@ package com.example.queue.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import com.example.queue.R
+import com.google.android.gms.dynamic.SupportFragmentWrapper
+import com.google.android.material.bottomsheet.BottomSheetDialog
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,6 +31,19 @@ class tab_1 : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+
+    lateinit var textWaitTime:TextView
+    lateinit var expectedTime:TextView
+    lateinit var minText:TextView
+    lateinit var textCurrentToken:TextView
+    lateinit var currentToken:TextView
+    lateinit var textYourToken:TextView
+    lateinit var yourToken:TextView
+    lateinit var leaveQueueButton:Button
+
+    lateinit var noWaitingImage:ImageView
+    lateinit var noWaiting:TextView
+    lateinit var joinQueueButton:Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,21 +64,61 @@ class tab_1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val joinQueueButton: Button = view.findViewById(R.id.joinQueueButton)
-        inQueueUpdateUI()
+        textWaitTime = view.findViewById(R.id.textWaitTime)
+        expectedTime = view.findViewById(R.id.expectedTime)
+        minText = view.findViewById(R.id.minText)
+        textCurrentToken = view.findViewById(R.id.textCurrentToken)
+        currentToken = view.findViewById(R.id.currentToken)
+        textYourToken = view.findViewById(R.id.textYourToken)
+        yourToken = view.findViewById(R.id.yourToken)
+        leaveQueueButton = view.findViewById(R.id.leaveQueueButton)
+
+        noWaitingImage = view.findViewById(R.id.noWaitingImage)
+        noWaiting = view.findViewById(R.id.noWaiting)
+        joinQueueButton = view.findViewById(R.id.joinQueueButton)
+
+//        inQueueUpdateUI()
         noQueueUpdateUI()
         joinQueueButton.setOnClickListener {
             Log.d(TAG, "joinQueueButton clicked")
-
+            val bottomSheet = joinQueueBottomSheet()
+            bottomSheet.show(requireActivity().supportFragmentManager,"shubham")
+        }
+        leaveQueueButton.setOnClickListener {
+            Log.d(TAG, "leaveQueueButton clicked")
         }
     }
 
     private fun noQueueUpdateUI() {
         Log.d(TAG, "noQueueUpdateUI() called")
+        textWaitTime.visibility = View.GONE
+        expectedTime.visibility = View.GONE
+        minText.visibility = View.GONE
+        textCurrentToken.visibility = View.GONE
+        currentToken.visibility = View.GONE
+        textYourToken.visibility = View.GONE
+        yourToken.visibility = View.GONE
+        leaveQueueButton.visibility = View.GONE
+
+        noWaitingImage.visibility = View.VISIBLE
+        noWaiting.visibility = View.VISIBLE
+        joinQueueButton.visibility = View.VISIBLE
     }
 
     private fun inQueueUpdateUI() {
         Log.d(TAG, "inQueueUpdateUI() called")
+        textWaitTime.visibility = View.VISIBLE
+        expectedTime.visibility = View.VISIBLE
+        minText.visibility = View.VISIBLE
+        textCurrentToken.visibility = View.VISIBLE
+        currentToken.visibility = View.VISIBLE
+        textYourToken.visibility = View.VISIBLE
+        yourToken.visibility = View.VISIBLE
+        leaveQueueButton.visibility = View.VISIBLE
+
+        noWaitingImage.visibility = View.GONE
+        noWaiting.visibility = View.GONE
+        joinQueueButton.visibility = View.GONE
     }
 
     companion object {

@@ -33,6 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textWaitTime" />
 
     <TextView
+        android:id="@+id/minText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -47,7 +48,7 @@
 
 
     <TextView
-        android:id="@+id/textcurrentToken"
+        android:id="@+id/textCurrentToken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -58,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
 
     <TextView
-        android:id="@+id/cuurentToken"
+        android:id="@+id/currentToken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -66,9 +67,9 @@
         android:textColor="@color/bright_green"
         android:textSize="50dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/textcurrentToken"
-        app:layout_constraintStart_toStartOf="@+id/textcurrentToken"
-        app:layout_constraintTop_toBottomOf="@+id/textcurrentToken" />
+        app:layout_constraintEnd_toEndOf="@+id/textCurrentToken"
+        app:layout_constraintStart_toStartOf="@+id/textCurrentToken"
+        app:layout_constraintTop_toBottomOf="@+id/textCurrentToken" />
 
     <TextView
         android:id="@+id/textYourToken"
@@ -82,7 +83,7 @@
         app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
 
     <TextView
-        android:id="@+id/YourToken"
+        android:id="@+id/yourToken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -95,6 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textYourToken" />
 
     <Button
+        android:id="@+id/leaveQueueButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -105,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cuurentToken" />
+        app:layout_constraintTop_toBottomOf="@+id/currentToken" />
 
     <ImageView
         android:id="@+id/noWaitingImage"
