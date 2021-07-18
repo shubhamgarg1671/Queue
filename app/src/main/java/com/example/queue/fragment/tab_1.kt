@@ -82,8 +82,9 @@ class tab_1 : Fragment() {
         if (queueID != null) {
             inQueueUpdateUI()
             updateData(queueID, false)
+        } else {
+            noQueueUpdateUI()
         }
-        noQueueUpdateUI()
         joinQueueButton.setOnClickListener {
             Log.d(TAG, "joinQueueButton clicked")
             val dialog = BottomSheetDialog(requireActivity())
@@ -144,11 +145,14 @@ class tab_1 : Fragment() {
                             totalToken.toString()  // last token is given to user who joined
                         myRef = database.getReference("queue/$queueID/totalToken")
                         myRef.setValue(totalToken)
-                        token = totalToken
+                            token = totalToken
                         inQueueUpdateUI()
                         newlyJoined = false   // without this onDataChanged is called infinitely
                     }
                     val currToken:Int = dataSnapshot.child("currentToken").value.toString().toInt()
+                    if (currToken == token) {
+                        noQueueUpdateUI()
+                    }
                     expectedWaitingTime.text = ((token - currToken) * averageTime).toString()
                     currentToken.text = currToken.toString()
                 }
