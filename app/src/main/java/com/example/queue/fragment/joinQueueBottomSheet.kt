@@ -27,37 +27,44 @@ class joinQueueBottomSheet : BottomSheetDialogFragment() {
             R.layout.join_queue_bottom_sheet_layout,
             container, false
         )
-        val course_button = v.findViewById<Button>(R.id.course_button)
-        course_button.setOnClickListener {
-            val pasteQueueID:EditText = requireView().findViewById(R.id.pasteQueueID)
-            val queueID:String = pasteQueueID.text.toString()
-            // Write a message to the database
-            val database = FirebaseDatabase.getInstance()
-            var myRef = database.getReference("queue/$queueID")
-
-            // Read from the database
-            myRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    val value = dataSnapshot.getValue()
-                    Log.d(TAG, "Value is: $value")
-                    if (value == null) {
-                        Toast.makeText(activity,"Incorrect Queue ID",Toast.LENGTH_LONG).show()
-                    } else {
-                        val averageTime = dataSnapshot.child("averageTime").getValue()
-                        val totalToken = dataSnapshot.child("totalToken").getValue()
-                        Log.d(TAG, "average time $averageTime totalToken$totalToken")
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // Failed to read value
-                    Log.w(TAG, "Failed to read value.", error.toException())
-                }
-            })
-            dismiss()
-        }
+//        course_button.setOnClickListener {
+//            val pasteQueueID:EditText = requireView().findViewById(R.id.pasteQueueID)
+//            val queueID:String = pasteQueueID.text.toString()
+//            // Write a message to the database
+//            val database = FirebaseDatabase.getInstance()
+//            var myRef = database.getReference("queue/$queueID")
+//
+//            // Read from the database
+//            myRef.addValueEventListener(object : ValueEventListener {
+//                override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                    // This method is called once with the initial value and again
+//                    // whenever data at this location is updated.
+//                    val value = dataSnapshot.getValue()
+//                    Log.d(TAG, "Value is: $value")
+//                    if (value == null) {
+//                        Toast.makeText(activity,"Incorrect Queue ID",Toast.LENGTH_LONG).show()
+//                    } else {
+////                        myRef = database.getReference("queue/$queueID/currentToken")
+////                        myRef.setValue(0)
+//                        val queueTitle = dataSnapshot.child("queueTitle").value.toString()
+//                        val averageTime:Int = dataSnapshot.child("averageTime").value.toString().toInt()
+//                        var totalToken:Int = dataSnapshot.child("totalToken").value.toString().toInt()
+//                        val yourToken:Int = totalToken
+//                        totalToken++
+//                        myRef = database.getReference("queue/$queueID/totalToken")
+//                        myRef.setValue(totalToken)
+//
+//                        Log.d(TAG, "average time $averageTime totalToken$totalToken")
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    // Failed to read value
+//                    Log.e(TAG, "Failed to read value.", error.toException())
+//                }
+//            })
+//            dismiss()
+//        }
         return v
     }
 }

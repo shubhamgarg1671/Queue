@@ -5,11 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.queue.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlin.properties.Delegates
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,8 +32,10 @@ class tab_1 : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    var token:Int = 0
+    val database:FirebaseDatabase = FirebaseDatabase.getInstance()
     lateinit var textWaitTime:TextView
-    lateinit var expectedTime:TextView
+    lateinit var expectedWaitingTime:TextView
     lateinit var minText:TextView
     lateinit var textCurrentToken:TextView
     lateinit var currentToken:TextView
@@ -59,8 +65,9 @@ class tab_1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var queueID:String? = null
         textWaitTime = view.findViewById(R.id.textWaitTime)
-        expectedTime = view.findViewById(R.id.expectedTime)
+        expectedWaitingTime = view.findViewById(R.id.expectedWaitingTime)
         minText = view.findViewById(R.id.minText)
         textCurrentToken = view.findViewById(R.id.textCurrentToken)
         currentToken = view.findViewById(R.id.currentToken)
@@ -72,22 +79,92 @@ class tab_1 : Fragment() {
         noWaiting = view.findViewById(R.id.noWaiting)
         joinQueueButton = view.findViewById(R.id.joinQueueButton)
 
-//        inQueueUpdateUI()
+        if (queueID != null) {
+            inQueueUpdateUI()
+            updateData(queueID, false)
+        }
         noQueueUpdateUI()
         joinQueueButton.setOnClickListener {
             Log.d(TAG, "joinQueueButton clicked")
-            val bottomSheet = joinQueueBottomSheet()
-            bottomSheet.show(requireActivity().supportFragmentManager, "tag")  // Don't know why this tag is passed here.
+            val dialog = BottomSheetDialog(requireActivity())
+
+            // on below line we are inflating a layout file for bottom sheet.
+            val bottomSheetView = layoutInflater.inflate(R.layout.join_queue_bottom_sheet_layout, null)
+
+            // on below line we are creating a variable for our button
+            // which is in the bottom sheet.
+            val joinQueue:Button = bottomSheetView.findViewById<Button>(R.id.joinQueue)
+            // on below line we are adding on click listener
+            // for join Queue button in bottom sheet.
+            joinQueue.setOnClickListener {
+                val pasteQueueID:EditText = bottomSheetView.findViewById(R.id.pasteQueueID)
+                queueID = pasteQueueID.text.toString()
+                updateData(queueID.toString(),true)
+                // on below line we are calling a dismiss
+                // method to close our dialog.
+                dialog.dismiss()
+            }
+
+            // on below line we are setting
+            // content view to our bottomSheetView.
+            dialog.setContentView(bottomSheetView)
+
+            // on below line we are calling
+            // a show method to display a dialog.
+            dialog.show()
         }
-        leaveQueueButton.setOnClickListener {
+            leaveQueueButton.setOnClickListener {
             Log.d(TAG, "leaveQueueButton clicked")
         }
+    }
+
+    private fun updateData(queueID: String, newlyJoined:Boolean) {
+
+        var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
+        //database reference
+        var myRef = database.getReference("queue/$queueID")
+
+        // Read from the database
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue()
+                Log.d(TAG, "Value is: $value")
+                if (value == null) {
+                    Toast.makeText(activity,"Incorrect Queue ID", Toast.LENGTH_LONG).show()
+                } else {
+                    val queueTitle = dataSnapshot.child("queueTitle").value.toString()
+                    val averageTime:Int = dataSnapshot.child("averageTime").value.toString().toInt()
+                    if (newlyJoined) {
+                        var totalToken: Int =
+                            dataSnapshot.child("totalToken").value.toString().toInt()
+                        totalToken++    // total tokens are incremented by one
+                        yourToken.text =
+                            totalToken.toString()  // last token is given to user who joined
+                        myRef = database.getReference("queue/$queueID/totalToken")
+                        myRef.setValue(totalToken)
+                        token = totalToken
+                        inQueueUpdateUI()
+                        newlyJoined = false   // without this onDataChanged is called infinitely
+                    }
+                    val currToken:Int = dataSnapshot.child("currentToken").value.toString().toInt()
+                    expectedWaitingTime.text = ((token - currToken) * averageTime).toString()
+                    currentToken.text = currToken.toString()
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.e(TAG, "Failed to read value.", error.toException())
+            }
+        })
+
     }
 
     private fun noQueueUpdateUI() {
         Log.d(TAG, "noQueueUpdateUI() called")
         textWaitTime.visibility = View.GONE
-        expectedTime.visibility = View.GONE
+        expectedWaitingTime.visibility = View.GONE
         minText.visibility = View.GONE
         textCurrentToken.visibility = View.GONE
         currentToken.visibility = View.GONE
@@ -103,7 +180,7 @@ class tab_1 : Fragment() {
     private fun inQueueUpdateUI() {
         Log.d(TAG, "inQueueUpdateUI() called")
         textWaitTime.visibility = View.VISIBLE
-        expectedTime.visibility = View.VISIBLE
+        expectedWaitingTime.visibility = View.VISIBLE
         minText.visibility = View.VISIBLE
         textCurrentToken.visibility = View.VISIBLE
         currentToken.visibility = View.VISIBLE

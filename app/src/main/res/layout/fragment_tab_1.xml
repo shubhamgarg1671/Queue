@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/expectedTime"
+        android:id="@+id/expectedWaitingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -41,8 +41,8 @@
         android:text="mins"
         android:textColor="@color/yellow"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/expectedTime"
-        app:layout_constraintStart_toEndOf="@+id/expectedTime"
+        app:layout_constraintBottom_toBottomOf="@+id/expectedWaitingTime"
+        app:layout_constraintStart_toEndOf="@+id/expectedWaitingTime"
         app:layout_constraintTop_toBottomOf="@+id/textWaitTime"
         app:layout_constraintVertical_bias="0.416" />
 
@@ -54,9 +54,9 @@
         android:layout_marginTop="30dp"
         android:text="Current Token"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/expectedTime"
+        app:layout_constraintEnd_toStartOf="@+id/expectedWaitingTime"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
+        app:layout_constraintTop_toBottomOf="@+id/expectedWaitingTime" />
 
     <TextView
         android:id="@+id/currentToken"
@@ -79,8 +79,8 @@
         android:text="Your Token"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/expectedTime"
-        app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
+        app:layout_constraintStart_toEndOf="@+id/expectedWaitingTime"
+        app:layout_constraintTop_toBottomOf="@+id/expectedWaitingTime" />
 
     <TextView
         android:id="@+id/yourToken"

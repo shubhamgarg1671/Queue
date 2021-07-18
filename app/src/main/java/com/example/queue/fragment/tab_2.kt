@@ -60,10 +60,14 @@ class tab_2 : Fragment() {
 
         val createQueueButton:Button = view.findViewById(R.id.createQueueButton)
         createQueueButton.setOnClickListener {
-            val averageTime = view.findViewById<EditText>(R.id.averageTime).text.toString()
             val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
+            var averageTime:Int? = view.findViewById<EditText>(R.id.averageTime).text.toString().toIntOrNull()
             Log.d(TAG, "createQueueButton clicked with averageTime $averageTime and queueTitile $queueTitile")
 
+            if (averageTime == null) {
+                averageTime = 2
+                Toast.makeText(requireActivity(),"averageTime sets to default 2 min",Toast.LENGTH_LONG).show()
+            }
             val uid:String = auth.uid!!
             val currentTimeStamp:String = System.currentTimeMillis().toString()
             val queueID:String = uid + currentTimeStamp
@@ -72,6 +76,11 @@ class tab_2 : Fragment() {
             myRef.setValue(queueTitile)
             myRef = database.getReference("queue/$queueID/averageTime")
             myRef.setValue(averageTime)
+            myRef = database.getReference("queue/$queueID/totalToken")
+            myRef.setValue(0)
+            myRef = database.getReference("queue/$queueID/currentToken")
+            myRef.setValue(0)
+
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)
             }
