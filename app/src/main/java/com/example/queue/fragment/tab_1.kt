@@ -9,11 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewTreeViewModelStoreOwner
 import com.example.queue.R
-import com.google.android.gms.dynamic.SupportFragmentWrapper
-import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -58,8 +54,7 @@ class tab_1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view:View =  inflater.inflate(R.layout.fragment_tab_1, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_tab_1, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,7 +77,7 @@ class tab_1 : Fragment() {
         joinQueueButton.setOnClickListener {
             Log.d(TAG, "joinQueueButton clicked")
             val bottomSheet = joinQueueBottomSheet()
-            bottomSheet.show(requireActivity().supportFragmentManager,"shubham")
+            bottomSheet.show(requireActivity().supportFragmentManager, "tag")  // Don't know why this tag is passed here.
         }
         leaveQueueButton.setOnClickListener {
             Log.d(TAG, "leaveQueueButton clicked")

@@ -68,9 +68,9 @@ class tab_2 : Fragment() {
             val currentTimeStamp:String = System.currentTimeMillis().toString()
             val queueID:String = uid + currentTimeStamp
             // Database reference
-            var myRef = database.getReference("queue/$queueID/queueTitile")
+            var myRef = database.getReference("queue/$queueID/queueTitle")
             myRef.setValue(queueTitile)
-            myRef = database.getReference("queue/$queueID/avarageTime")
+            myRef = database.getReference("queue/$queueID/averageTime")
             myRef.setValue(averageTime)
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)

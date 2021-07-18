@@ -7,10 +7,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
+    <EditText
+        android:id="@+id/pasteQueueID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="This is a Modal BottomSheet"
+        android:hint="Paste Queue ID here"
+        android:maxLines="1"
+        android:textColorHint="@color/black"
         android:textSize="25sp" />
 
     <Button
@@ -18,6 +21,6 @@
         android:id="@+id/course_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Share this Course" />
+        android:text="Join Queue" />
 
 </LinearLayout>
