@@ -35,6 +35,7 @@ class tab_2 : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var auth: FirebaseAuth
+    val TAG = "tab_2 fragment"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -80,6 +81,8 @@ class tab_2 : Fragment() {
             myRef.setValue(0)
             myRef = database.getReference("queue/$queueID/currentToken")
             myRef.setValue(0)
+            myRef = database.getReference("queue/$queueID/queueFull")
+            myRef.setValue(false)
 
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)

@@ -13,16 +13,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.queue.fragment.TAG
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-
 class yourQueueActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
 
+    val TAG = "yourQueueActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_queue)
@@ -42,6 +41,19 @@ class yourQueueActivity : AppCompatActivity() {
             currentToken.text = (oldToken + 1).toString()
             val ref = database.getReference("queue/$queueID/currentToken")
             ref.setValue(oldToken + 1)
+        }
+        val queueFull:Button = findViewById(R.id.queueFull)
+        queueFull.setOnClickListener{
+            Log.d(TAG, "queueFull clicked")
+            if (queueFull.text == "Queue Full") {
+                queueFull.text = "Allow more"    // Botton status will be apposite to that in database
+                val ref = database.getReference("queue/$queueID/queueFull")
+                ref.setValue(true)
+            } else {
+                queueFull.text = "Queue Full"   // Botton status will be apposite to that in database
+                val ref = database.getReference("queue/$queueID/queueFull")
+                ref.setValue(false)
+            }
         }
         // Read from the database
         myRef.addValueEventListener(object : ValueEventListener {

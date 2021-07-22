@@ -20,7 +20,6 @@ import kotlin.properties.Delegates
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-val TAG = "tab1_fragment"
 /**
  * A simple [Fragment] subclass.
  * Use the [tab_1.newInstance] factory method to
@@ -31,6 +30,8 @@ class tab_1 : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    val TAG = "tab1_fragment"
+    var queueID:String? = null
     var token:Int = 0
     val database:FirebaseDatabase = FirebaseDatabase.getInstance()
     lateinit var textWaitTime:TextView
@@ -64,7 +65,6 @@ class tab_1 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var queueID:String? = null
         textWaitTime = view.findViewById(R.id.textWaitTime)
         expectedWaitingTime = view.findViewById(R.id.expectedWaitingTime)
         minText = view.findViewById(R.id.minText)
@@ -80,7 +80,7 @@ class tab_1 : Fragment() {
 
         if (queueID != null) {
             inQueueUpdateUI()
-            updateData(queueID, false)
+            updateData(false)
         } else {
             noQueueUpdateUI()
         }
@@ -98,11 +98,15 @@ class tab_1 : Fragment() {
             // for join Queue button in bottom sheet.
             joinQueue.setOnClickListener {
                 val pasteQueueID:EditText = bottomSheetView.findViewById(R.id.pasteQueueID)
-                queueID = pasteQueueID.text.toString()
-                updateData(queueID.toString(),true)
-                // on below line we are calling a dismiss
-                // method to close our dialog.
-                dialog.dismiss()
+                if (pasteQueueID.text.isEmpty()) {
+                    Toast.makeText(requireActivity(),"Queue ID can not be empty",Toast.LENGTH_LONG).show()
+                } else {
+                    queueID = pasteQueueID.text.toString()
+                    updateData(true)
+                    // on below line we are calling a dismiss
+                    // method to close our dialog.
+                    dialog.dismiss()
+                }
             }
 
             // on below line we are setting
@@ -118,10 +122,12 @@ class tab_1 : Fragment() {
         }
     }
 
-    private fun updateData(queueID: String, newlyJoined:Boolean) {
+    private fun updateData(newlyJoined:Boolean) {
 
+        Log.d(TAG, "updateData() called with: newlyJoined = $newlyJoined")
         var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
         //database reference
+
         var myRef = database.getReference("queue/$queueID")
 
         // Read from the database
@@ -133,6 +139,11 @@ class tab_1 : Fragment() {
                 Log.d(TAG, "Value is: $value")
                 if (value == null) {
                     Toast.makeText(activity,"Incorrect Queue ID", Toast.LENGTH_LONG).show()
+                } else if (newlyJoined && dataSnapshot.child("queueFull").value.toString().toBoolean()) {
+                    Toast.makeText(activity,"Sorry, Queue is Full", Toast.LENGTH_LONG).show()
+                    // need to create an alert dialog box
+                    // Toast message will not work
+                    queueID = null
                 } else {
                     val queueTitle = dataSnapshot.child("queueTitle").value.toString()
                     val averageTime:Int = dataSnapshot.child("averageTime").value.toString().toInt()
