@@ -1,19 +1,25 @@
 package com.example.queue.fragment
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.CodeScannerView
+import com.budiyev.android.codescanner.DecodeCallback
 import com.example.queue.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlin.properties.Delegates
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,6 +35,7 @@ class tab_1 : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var codeScanner: CodeScanner
 
     val TAG = "tab1_fragment"
     var queueID:String? = null
@@ -77,6 +84,7 @@ class tab_1 : Fragment() {
         noWaitingImage = view.findViewById(R.id.noWaitingImage)
         noWaiting = view.findViewById(R.id.noWaiting)
         joinQueueButton = view.findViewById(R.id.joinQueueButton)
+        requestCamera()
 
         if (queueID != null) {
             inQueueUpdateUI()
@@ -91,6 +99,16 @@ class tab_1 : Fragment() {
             // on below line we are inflating a layout file for bottom sheet.
             val bottomSheetView = layoutInflater.inflate(R.layout.join_queue_bottom_sheet_layout, null)
 
+            val scannerView = bottomSheetView.findViewById<CodeScannerView>(R.id.scanner_view)
+            val activity = requireActivity()
+            codeScanner = CodeScanner(activity, scannerView)
+            codeScanner.decodeCallback = DecodeCallback {
+                activity.runOnUiThread {
+                    Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
+                }
+            }
+            codeScanner.startPreview()
+
             // on below line we are creating a variable for our button
             // which is in the bottom sheet.
             val joinQueue:Button = bottomSheetView.findViewById<Button>(R.id.joinQueue)
@@ -98,6 +116,7 @@ class tab_1 : Fragment() {
             // for join Queue button in bottom sheet.
             joinQueue.setOnClickListener {
                 val pasteQueueID:EditText = bottomSheetView.findViewById(R.id.pasteQueueID)
+
                 if (pasteQueueID.text.isEmpty()) {
                     Toast.makeText(requireActivity(),"Queue ID can not be empty",Toast.LENGTH_LONG).show()
                 } else {
@@ -226,4 +245,33 @@ class tab_1 : Fragment() {
                 }
             }
     }
+
+    private fun requestCamera() {
+        if (ActivityCompat.checkSelfPermission(
+                requireActivity(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+//            startCamera()
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    50
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.CAMERA),
+                    50
+                )
+            }
+        }
+    }
+
 }
