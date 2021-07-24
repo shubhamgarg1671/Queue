@@ -82,7 +82,8 @@
         app:layout_constraintEnd_toStartOf="@+id/queueFull"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cuurentTokenYourQueue" />
+        app:layout_constraintTop_toBottomOf="@+id/cuurentTokenYourQueue"
+        app:layout_constraintBottom_toTopOf="@+id/qrCodeImage"/>
 
     <Button
         android:id="@+id/queueFull"
@@ -96,6 +97,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/callNext"
-        app:layout_constraintTop_toBottomOf="@+id/totalToken" />
+        app:layout_constraintTop_toBottomOf="@+id/totalToken"
+        app:layout_constraintBottom_toTopOf="@+id/qrCodeImage"/>
+
+    <ImageView
+        android:id="@+id/qrCodeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:src="@drawable/smille"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/queueFull" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

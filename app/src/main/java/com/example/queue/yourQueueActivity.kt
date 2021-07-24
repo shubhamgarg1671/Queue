@@ -4,19 +4,24 @@ import android.R.attr.label
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.WriterException
+import com.google.zxing.qrcode.QRCodeWriter
+
 
 class yourQueueActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
@@ -80,6 +85,23 @@ class yourQueueActivity : AppCompatActivity() {
                 Log.e(TAG, "Failed to read value.", error.toException())
             }
         })
+
+//        val image = findViewById<ImageView>(R.id.image)
+        val writer = QRCodeWriter()
+        try {
+            val bitMatrix = writer.encode("content", BarcodeFormat.QR_CODE, 512, 512)
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    bmp.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+                }
+            }
+            (findViewById<View>(R.id.qrCodeImage) as ImageView).setImageBitmap(bmp)
+        } catch (e: WriterException) {
+            e.printStackTrace()
+        }
 
     }
     private fun updateData(queueID: String, newlyJoined:Boolean) {
