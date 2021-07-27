@@ -1,9 +1,10 @@
 package com.example.queue.fragment
 
 import android.Manifest
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.logging.LogManager
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,6 +40,7 @@ class tab_1 : Fragment() {
     private var param2: String? = null
     private lateinit var codeScanner: CodeScanner
 
+    lateinit var sharedPref: SharedPreferences
     val TAG = "tab1_fragment"
     var queueID:String? = null
     var token:Int = 0
@@ -86,6 +89,14 @@ class tab_1 : Fragment() {
         noWaiting = view.findViewById(R.id.noWaiting)
         joinQueueButton = view.findViewById(R.id.joinQueueButton)
         requestCamera()
+
+        sharedPref = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
+//        sharedPref.edit().putString("queueID",null).apply()
+
+        queueID = sharedPref.getString("queueID", null)
+        token = sharedPref.getInt("token", 0)
+
+        Log.d(TAG, "onViewCreated() sharedPref $sharedPref queueID = $queueID")
 
         if (queueID != null) {
             inQueueUpdateUI()
@@ -140,6 +151,7 @@ class tab_1 : Fragment() {
         }
             leaveQueueButton.setOnClickListener {
             Log.d(TAG, "leaveQueueButton clicked")
+                // remove from shared pref
         }
     }
 
@@ -151,9 +163,12 @@ class tab_1 : Fragment() {
 
         // so that we can have a valid
         // firebase path removing special characters
-        // / [ ] &
-        val re = Regex("[^A-Za-z0-9 ]")
-        queueID = re.replace(queueID.toString(), "") // works
+        queueID = queueID?.replace(".", "")
+        queueID = queueID?.replace("#", "")
+        queueID = queueID?.replace("$", "")
+        queueID = queueID?.replace("[", "")
+        queueID = queueID?.replace("]", "")
+
         var myRef = database.getReference("queue/$queueID")
 
         // Read from the database
@@ -182,12 +197,18 @@ class tab_1 : Fragment() {
                         myRef = database.getReference("queue/$queueID/totalToken")
                         myRef.setValue(totalToken)
                             token = totalToken
+                        sharedPref.edit().putString("queueID",queueID).apply()
+                        sharedPref.edit().putInt("token",token).apply()
+
+                        Log.d(TAG, "onDataChanged() newlyJoined sharedPref $sharedPref queueID $queueID")
                         inQueueUpdateUI()
+
                         newlyJoined = false   // without this onDataChanged is called infinitely
                     }
                     val currToken:Int = dataSnapshot.child("currentToken").value.toString().toInt()
-                    if (currToken == token) {
+                    if (currToken >= token) {
                         noQueueUpdateUI()
+                        sharedPref.edit().putString("queueID",null).apply()
                     }
                     expectedWaitingTime.text = ((token - currToken) * averageTime).toString()
                     currentToken.text = currToken.toString()

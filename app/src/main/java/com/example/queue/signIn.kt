@@ -153,7 +153,6 @@ class signIn : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            Toast.makeText(applicationContext, "user allready logged in", Toast.LENGTH_LONG).show()
             afterLogIn(currentUser)
         }
     }

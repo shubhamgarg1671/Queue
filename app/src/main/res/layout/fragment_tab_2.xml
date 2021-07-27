@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:inputType="number"
+        android:hint="Default: 2 min"
         app:layout_constraintTop_toBottomOf="@+id/textViewAverageTime"
         tools:layout_editor_absoluteX="10dp" />
 
