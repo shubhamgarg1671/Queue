@@ -160,7 +160,7 @@ class tab_1 : Fragment() {
 
     private fun updateData(newlyJoined:Boolean) {
 
-        Log.d(TAG, "updateData() called with: newlyJoined = $newlyJoined")
+        Log.d(TAG, "updateData() called with: newlyJoined = $newlyJoined and queueID $queueID")
         var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
         //database reference
 
