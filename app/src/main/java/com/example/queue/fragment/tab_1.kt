@@ -151,7 +151,10 @@ class tab_1 : Fragment() {
         }
             leaveQueueButton.setOnClickListener {
             Log.d(TAG, "leaveQueueButton clicked")
+                queueID = null
+                noQueueUpdateUI()
                 // remove from shared pref
+                sharedPref.edit().putString("queueID",null).apply()
         }
     }
 
