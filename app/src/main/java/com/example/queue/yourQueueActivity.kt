@@ -89,7 +89,7 @@ class yourQueueActivity : AppCompatActivity() {
 //        val image = findViewById<ImageView>(R.id.image)
         val writer = QRCodeWriter()
         try {
-            val bitMatrix = writer.encode("content", BarcodeFormat.QR_CODE, 512, 512)
+            val bitMatrix = writer.encode(queueID, BarcodeFormat.QR_CODE, 512, 512)
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)

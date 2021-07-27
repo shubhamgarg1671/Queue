@@ -69,11 +69,14 @@ class tab_2 : Fragment() {
                 averageTime = 2
                 Toast.makeText(requireActivity(),"averageTime sets to default 2 min",Toast.LENGTH_LONG).show()
             }
-            val uid:String = auth.uid!!
-            val currentTimeStamp:String = System.currentTimeMillis().toString()
-            val queueID:String = uid + currentTimeStamp
-            // Database reference
-            var myRef = database.getReference("queue/$queueID/queueTitle")
+
+            var myRef = database.getReference("queue")
+            myRef = myRef.push()
+            if (myRef.key == null) {
+                Toast.makeText(requireActivity(),"Unable to generate Queue ID",Toast.LENGTH_LONG).show()
+            }
+            val queueID:String = myRef.key!!
+            myRef = database.getReference("queue/$queueID/queueTitle")
             myRef.setValue(queueTitile)
             myRef = database.getReference("queue/$queueID/averageTime")
             myRef.setValue(averageTime)

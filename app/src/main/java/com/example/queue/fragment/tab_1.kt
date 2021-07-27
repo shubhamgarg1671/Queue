@@ -3,6 +3,7 @@ package com.example.queue.fragment
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -98,24 +99,25 @@ class tab_1 : Fragment() {
 
             // on below line we are inflating a layout file for bottom sheet.
             val bottomSheetView = layoutInflater.inflate(R.layout.join_queue_bottom_sheet_layout, null)
+            val pasteQueueID:EditText = bottomSheetView.findViewById(R.id.pasteQueueID)
+            val joinQueue:Button = bottomSheetView.findViewById<Button>(R.id.joinQueue)
 
             val scannerView = bottomSheetView.findViewById<CodeScannerView>(R.id.scanner_view)
             val activity = requireActivity()
             codeScanner = CodeScanner(activity, scannerView)
             codeScanner.decodeCallback = DecodeCallback {
                 activity.runOnUiThread {
-                    Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
+                    pasteQueueID.setText(it.text)
+                    joinQueue.performClick()
                 }
             }
             codeScanner.startPreview()
 
             // on below line we are creating a variable for our button
             // which is in the bottom sheet.
-            val joinQueue:Button = bottomSheetView.findViewById<Button>(R.id.joinQueue)
             // on below line we are adding on click listener
             // for join Queue button in bottom sheet.
             joinQueue.setOnClickListener {
-                val pasteQueueID:EditText = bottomSheetView.findViewById(R.id.pasteQueueID)
 
                 if (pasteQueueID.text.isEmpty()) {
                     Toast.makeText(requireActivity(),"Queue ID can not be empty",Toast.LENGTH_LONG).show()
@@ -147,6 +149,11 @@ class tab_1 : Fragment() {
         var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
         //database reference
 
+        // so that we can have a valid
+        // firebase path removing special characters
+        // / [ ] &
+        val re = Regex("[^A-Za-z0-9 ]")
+        queueID = re.replace(queueID.toString(), "") // works
         var myRef = database.getReference("queue/$queueID")
 
         // Read from the database

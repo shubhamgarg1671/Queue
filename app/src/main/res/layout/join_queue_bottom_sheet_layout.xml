@@ -7,6 +7,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <Button
+        android:id="@+id/joinQueue"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Queue" />
+
     <EditText
         android:id="@+id/pasteQueueID"
         android:layout_width="wrap_content"
@@ -32,12 +39,5 @@
         app:frameSize="0.75"
         app:frameThickness="2dp"
         app:maskColor="#77000000"/>
-
-    <Button
-        android:id="@+id/joinQueue"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join Queue" />
 
 </LinearLayout>
