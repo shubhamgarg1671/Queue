@@ -1,6 +1,5 @@
 package com.example.queue.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
@@ -15,11 +14,7 @@ import android.widget.Toast
 import com.example.queue.R
 import com.example.queue.yourQueueActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,7 +63,6 @@ class tab_2 : Fragment() {
 
             if (averageTime == null) {
                 averageTime = 2
-                Toast.makeText(requireActivity(),"averageTime sets to default 2 min",Toast.LENGTH_LONG).show()
             }
 
             var myRef = database.getReference("queue")

@@ -11,17 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:textIsSelectable="true"
+        android:textStyle="bold"
+        android:textAlignment="center"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/textQueueID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:textIsSelectable="true"
-        app:layout_constraintTop_toBottomOf="@+id/textQueueTitle" />
 
     <TextView
         android:id="@+id/textcurrentTokenYourQueue"
@@ -31,7 +23,7 @@
         android:text="Current Token"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textQueueID" />
+        app:layout_constraintTop_toBottomOf="@+id/textQueueTitle" />
 
     <TextView
         android:id="@+id/cuurentTokenYourQueue"
@@ -54,7 +46,7 @@
         android:text="Total Token"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textQueueID" />
+        app:layout_constraintTop_toBottomOf="@+id/textQueueTitle" />
 
     <TextView
         android:id="@+id/totalToken"
@@ -106,9 +98,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:src="@drawable/smille"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/copyQueueIDButton"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/queueFull" />
 
+    <Button
+        android:id="@+id/copyQueueIDButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Copy Queue ID"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,14 +31,10 @@ class yourQueueActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_queue)
-        val queueID = intent.getStringExtra(EXTRA_MESSAGE)
+        val queueID = intent.getStringExtra(EXTRA_MESSAGE)!!
         val currentToken:TextView = findViewById(R.id.cuurentTokenYourQueue)
         val totalTokan:TextView = findViewById(R.id.totalToken)
-        val clipboard: ClipboardManager =
-            getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(label.toString(), queueID)
-        clipboard.setPrimaryClip(clip)
-
+        copyToClipBoard(queueID)
         val myRef = database.getReference("queue/$queueID")
 
         val callNext:Button = findViewById(R.id.callNext)
@@ -68,6 +65,8 @@ class yourQueueActivity : AppCompatActivity() {
                 val value = dataSnapshot.getValue()
                 Log.d(TAG, "Value is: $value")
                 val queueTitle = dataSnapshot.child("queueTitle").value.toString()
+                val textViewQueueTitle:TextView = findViewById(R.id.textQueueTitle)
+                textViewQueueTitle.setText(queueTitle)
                 val totalTokenInt: Int =
                     dataSnapshot.child("totalToken").value.toString().toInt()
                 totalTokan.text = totalTokenInt.toString()
@@ -103,12 +102,17 @@ class yourQueueActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
+        val copyQueueIDButton:Button = findViewById(R.id.copyQueueIDButton)
+        copyQueueIDButton.setOnClickListener {
+            copyToClipBoard(queueID)
+            Toast.makeText(this,"Queue ID copied",Toast.LENGTH_SHORT).show()
+        }
     }
-    private fun updateData(queueID: String, newlyJoined:Boolean) {
 
-        var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
-        //database reference
-
+    private fun copyToClipBoard(queueID: String) {
+        val clipboard: ClipboardManager =
+            getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText(label.toString(), queueID)
+        clipboard.setPrimaryClip(clip)
     }
-
 }
