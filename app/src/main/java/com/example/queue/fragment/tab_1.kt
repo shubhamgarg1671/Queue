@@ -89,13 +89,10 @@ class tab_1 : Fragment() {
         noWaiting = view.findViewById(R.id.noWaiting)
         joinQueueButton = view.findViewById(R.id.joinQueueButton)
         requestCamera()
-
         sharedPref = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
-//        sharedPref.edit().putString("queueID",null).apply()
 
         queueID = sharedPref.getString("queueID", null)
         token = sharedPref.getInt("token", 0)
-
         Log.d(TAG, "onViewCreated() sharedPref $sharedPref queueID = $queueID")
 
         if (queueID != null) {
@@ -106,6 +103,7 @@ class tab_1 : Fragment() {
         }
         joinQueueButton.setOnClickListener {
             Log.d(TAG, "joinQueueButton clicked")
+            requestCamera()
             val dialog = BottomSheetDialog(requireActivity())
 
             // on below line we are inflating a layout file for bottom sheet.
@@ -215,6 +213,7 @@ class tab_1 : Fragment() {
                     }
                     expectedWaitingTime.text = ((token - currToken) * averageTime).toString()
                     currentToken.text = currToken.toString()
+                    yourToken.text = token.toString()
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -222,7 +221,6 @@ class tab_1 : Fragment() {
                 Log.e(TAG, "Failed to read value.", error.toException())
             }
         })
-
     }
 
     private fun noQueueUpdateUI() {
@@ -284,7 +282,9 @@ class tab_1 : Fragment() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
 //            startCamera()
+            Log.d(TAG, "already granted Camera permission")
         } else {
+            Log.d(TAG, "requestCamera permission")
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
                     Manifest.permission.CAMERA
@@ -304,5 +304,4 @@ class tab_1 : Fragment() {
             }
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.queue.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
@@ -86,6 +87,9 @@ class tab_2 : Fragment() {
             myRef.setValue(0)
             myRef = database.getReference("queue/$queueID/queueFull")
             myRef.setValue(false)
+
+//            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!
+
 
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)
