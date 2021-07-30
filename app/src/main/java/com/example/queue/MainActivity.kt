@@ -18,9 +18,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate() called with: savedInstanceState = $savedInstanceState")
 
-
-
-
         val viewPager = findViewById<ViewPager>(R.id.viewPager);
         val viewPagerAdapter = viewPagerAdapter(
             supportFragmentManager

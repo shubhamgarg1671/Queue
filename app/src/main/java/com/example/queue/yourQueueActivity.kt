@@ -23,24 +23,25 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 
-
 class yourQueueActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
 
+    var currToken:Int = 0
+    var totalTokenInt:Int = 0
     val TAG = "yourQueueActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_queue)
         val queueID = intent.getStringExtra(EXTRA_MESSAGE)!!
-        val currentToken:TextView = findViewById(R.id.cuurentTokenYourQueue)
-        val totalTokan:TextView = findViewById(R.id.totalToken)
+        val currentTokenView:TextView = findViewById(R.id.cuurentTokenYourQueue)
+        val totalTokanView:TextView = findViewById(R.id.totalToken)
         copyToClipBoard(queueID)
         val myRef = database.getReference("queue/$queueID")
 
         val callNext:Button = findViewById(R.id.callNext)
         callNext.setOnClickListener {
-            val oldToken:Int = currentToken.text.toString().toInt()
-            currentToken.text = (oldToken + 1).toString()
+            val oldToken:Int = currentTokenView.text.toString().toInt()
+            currentTokenView.text = (oldToken + 1).toString()
             val ref = database.getReference("queue/$queueID/currentToken")
             ref.setValue(oldToken + 1)
         }
@@ -67,17 +68,17 @@ class yourQueueActivity : AppCompatActivity() {
                 val queueTitle = dataSnapshot.child("queueTitle").value.toString()
                 val textViewQueueTitle:TextView = findViewById(R.id.textQueueTitle)
                 textViewQueueTitle.setText(queueTitle)
-                val totalTokenInt: Int =
+                totalTokenInt =
                     dataSnapshot.child("totalToken").value.toString().toInt()
-                totalTokan.text = totalTokenInt.toString()
-                val currToken:Int =
+                totalTokanView.text = totalTokenInt.toString()
+                currToken =
                     dataSnapshot.child("currentToken").value.toString().toInt()
                 if (currToken == totalTokenInt) {
                     callNext.visibility = View.GONE
                 } else {
                     callNext.visibility = View.VISIBLE
                 }
-                currentToken.text = dataSnapshot.child("currentToken").value.toString()
+                currentTokenView.text = dataSnapshot.child("currentToken").value.toString()
             }
             override fun onCancelled(error: DatabaseError) {
                 // Failed to read value
@@ -106,6 +107,14 @@ class yourQueueActivity : AppCompatActivity() {
         copyQueueIDButton.setOnClickListener {
             copyToClipBoard(queueID)
             Toast.makeText(this,"Queue ID copied",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (currToken == totalTokenInt) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this,"Please, Complete the Queue",Toast.LENGTH_LONG).show()
         }
     }
 
