@@ -16,10 +16,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mukesh.OnOtpCompletionListener
 import com.mukesh.OtpView
 import java.util.concurrent.TimeUnit
@@ -35,7 +37,7 @@ class signIn : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_in)
-
+        Log.d(TAG, "onCreate() called with: savedInstanceState = $savedInstanceState")
         var storedVerificationId = ""
         var resendToken: PhoneAuthProvider.ForceResendingToken
         otpView = findViewById(R.id.otp_view)
@@ -46,7 +48,7 @@ class signIn : AppCompatActivity() {
                 Log.d(TAG, "Entered otp = $otp sstoredVerificationId = $storedVerificationId")
                 val credential =
                     PhoneAuthProvider.getCredential(storedVerificationId!!, otp.toString())
-                // do Stuff
+                // do Stuff to check if otp entered is correct
                 Log.d("onOtpCompleted=>", otp!!)
                 signInWithPhoneAuthCredential(credential)
             }
@@ -154,6 +156,7 @@ class signIn : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             afterLogIn(currentUser)
+            saveDeviceRegistrationToken(currentUser)
         }
     }
 
@@ -179,6 +182,8 @@ class signIn : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
+                    //for notification part
+                    saveDeviceRegistrationToken(user!!)
                     afterLogIn(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -186,6 +191,22 @@ class signIn : AppCompatActivity() {
                     googleFailedUpdateUI()
                 }
             }
+    }
+
+    private fun saveDeviceRegistrationToken(user: FirebaseUser) {
+        Log.d(TAG, "saveDeviceRegistrationToken() called with: user = $user")
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.e(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            Log.d(TAG, "device token generated $token")
+        })
     }
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
@@ -196,7 +217,8 @@ class signIn : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
 
                     val user = task.result?.user
-                    afterLogIn(user!!)
+                    saveDeviceRegistrationToken(user!!)
+                    afterLogIn(user)
                 } else {
                     // Sign in failed, display a message and update the UI
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -212,7 +234,7 @@ class signIn : AppCompatActivity() {
             }
     }
 
-    fun afterLogIn(currentUser: FirebaseUser?) {
+    fun afterLogIn(currentUser: FirebaseUser) {
         Log.d(TAG, "afterLogIn() called with: currentUser = $currentUser")
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
