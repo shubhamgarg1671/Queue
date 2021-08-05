@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.mukesh.OnOtpCompletionListener
 import com.mukesh.OtpView
@@ -156,7 +158,6 @@ class signIn : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             afterLogIn(currentUser)
-            saveDeviceRegistrationToken(currentUser)
         }
     }
 
@@ -183,7 +184,7 @@ class signIn : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     //for notification part
-                    saveDeviceRegistrationToken(user!!)
+                    saveUserInfo(user!!)
                     afterLogIn(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -193,19 +194,27 @@ class signIn : AppCompatActivity() {
             }
     }
 
-    private fun saveDeviceRegistrationToken(user: FirebaseUser) {
-        Log.d(TAG, "saveDeviceRegistrationToken() called with: user = $user")
+    private fun saveUserInfo(user: FirebaseUser) {
+        Log.d(TAG, "saveUserInfo() called with: user = $user")
+        var contact = user.phoneNumber
+        if (contact == null)
+        {
+            contact = user.email
+        }
+        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+        val uid = user.uid
+        var myRef = database.getReference("user/$uid/contact")
+        myRef.setValue(contact)
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.e(TAG, "Fetching FCM registration token failed", task.exception)
                 return@OnCompleteListener
             }
-
             // Get new FCM registration token
             val token = task.result
-
-            // Log and toast
             Log.d(TAG, "device token generated $token")
+            myRef = database.getReference("user/$uid/deviceToken")
+            myRef.setValue(token)
         })
     }
 
@@ -217,7 +226,7 @@ class signIn : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
 
                     val user = task.result?.user
-                    saveDeviceRegistrationToken(user!!)
+                    saveUserInfo(user!!)
                     afterLogIn(user)
                 } else {
                     // Sign in failed, display a message and update the UI
