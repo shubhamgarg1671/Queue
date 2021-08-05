@@ -133,7 +133,7 @@ class signIn : AppCompatActivity() {
         val googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         //https://stackoverflow.com/a/63654043/12575211
-        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
                 val data: Intent? = result.data
