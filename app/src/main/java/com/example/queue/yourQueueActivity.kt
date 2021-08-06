@@ -29,14 +29,16 @@ import com.google.zxing.qrcode.QRCodeWriter
 
 class yourQueueActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
+//    val deviceToken:String = "fPQ6R2E5QiONjugWqujuZ5:APA91bFBNzyRks6HvZkaMY4hAtCtlKKPJyzNgJy6RR573mC0ETmciDQ0h2pLWwkLXVyiR_UesY-R1HT2AhPRFTTAYUi_ISuBqQntcqbOMBccq_dLE8UGGYSNPL7AcrE5a0j_uWHi8Q51"
 
+    var queueID: String = ""
     var currToken:Int = 0
     var totalTokenInt:Int = 0
     val TAG = "yourQueueActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_your_queue)
-        val queueID = intent.getStringExtra(EXTRA_MESSAGE)!!
+        queueID = intent.getStringExtra(EXTRA_MESSAGE)!!
         val currentTokenView:TextView = findViewById(R.id.cuurentTokenYourQueue)
         val totalTokanView:TextView = findViewById(R.id.totalToken)
         copyToClipBoard(queueID)
@@ -48,28 +50,6 @@ class yourQueueActivity : AppCompatActivity() {
             currentTokenView.text = (oldToken + 1).toString()
             val ref = database.getReference("queue/$queueID/currentToken")
             ref.setValue(oldToken + 1)
-            val queue = Volley.newRequestQueue(this)
-            val deviceToken = "fPQ6R2E5QiONjugWqujuZ5:APA91bFBNzyRks6HvZkaMY4hAtCtlKKPJyzNgJy6RR573mC0ETmciDQ0h2pLWwkLXVyiR_UesY-R1HT2AhPRFTTAYUi_ISuBqQntcqbOMBccq_dLE8UGGYSNPL7AcrE5a0j_uWHi8Q51"
-            val url = "https://queue-server.herokuapp.com/$deviceToken"
-
-            // Request a string response from the provided URL.
-            val stringRequest = StringRequest(
-                Request.Method.GET, url,
-                { response ->
-                    // Display the first 500 characters of the response string.
-                    //textView.text = "Response is: ${response.substring(0, 500)}"
-                    Toast.makeText(this,response,Toast.LENGTH_LONG).show()
-                    Log.d(TAG, "volley response = $response")
-                },
-                { error ->
-                    Toast.makeText(this,error.message,Toast.LENGTH_LONG).show()
-                    Log.e(TAG, "Volley error = $error")
-                //    textView.text = "That didn't work!"
-                })
-
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest)
-
         }
         val queueFull:Button = findViewById(R.id.queueFull)
         queueFull.setOnClickListener{
@@ -97,14 +77,19 @@ class yourQueueActivity : AppCompatActivity() {
                 totalTokenInt =
                     dataSnapshot.child("totalToken").value.toString().toInt()
                 totalTokanView.text = totalTokenInt.toString()
-                currToken =
-                    dataSnapshot.child("currentToken").value.toString().toInt()
+                if (currToken != dataSnapshot.child("currentToken").value.toString().toInt()) {
+
+                    currToken = dataSnapshot.child("currentToken").value.toString().toInt()
+                    val clientUID = dataSnapshot.child("client/$currToken/uid").value.toString()
+                    sendNotificationToClient(clientUID)
+
+                    currentTokenView.text = dataSnapshot.child("currentToken").value.toString()
+                }
                 if (currToken == totalTokenInt) {
                     callNext.visibility = View.GONE
                 } else {
                     callNext.visibility = View.VISIBLE
                 }
-                currentTokenView.text = dataSnapshot.child("currentToken").value.toString()
             }
             override fun onCancelled(error: DatabaseError) {
                 // Failed to read value
@@ -149,5 +134,44 @@ class yourQueueActivity : AppCompatActivity() {
             getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText(label.toString(), queueID)
         clipboard.setPrimaryClip(clip)
+    }
+    private fun sendNotificationToClient(clientUID:String) {
+        val queue = Volley.newRequestQueue(this)
+        val myRef = database.getReference("user/$clientUID")
+        // Read from the database
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue()
+                Log.d(TAG, "Value is: $value")
+                val clientContact = dataSnapshot.child("contact").value.toString()
+                val clientDeviceToken = dataSnapshot.child("deviceToken").value.toString()
+                val url = "https://queue-server.herokuapp.com/$clientDeviceToken"
+
+                // Request a string response from the provided URL.
+                val stringRequest = StringRequest(
+                    Request.Method.GET, url,
+                    { response ->
+                        // Display the first 500 characters of the response string.
+                        //textView.text = "Response is: ${response.substring(0, 500)}"
+                        Toast.makeText(this@yourQueueActivity,response,Toast.LENGTH_LONG).show()
+                        Log.d(TAG, "volley response = $response")
+                    },
+                    { error ->
+                        Log.e(TAG, "Volley error = $error")
+                        Toast.makeText(this@yourQueueActivity,error.message,Toast.LENGTH_LONG).show()
+                    })
+
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.e(TAG, "Failed to read value.", error.toException())
+                Toast.makeText(this@yourQueueActivity,"failed to read client info",Toast.LENGTH_LONG).show()
+            }
+        })
+
     }
 }
