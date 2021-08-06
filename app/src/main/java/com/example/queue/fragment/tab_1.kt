@@ -60,6 +60,8 @@ class tab_1 : Fragment() {
     lateinit var noWaiting:TextView
     lateinit var joinQueueButton:Button
 
+    lateinit var tab_1_progressBar:ProgressBar
+
     val auth = FirebaseAuth.getInstance()
     val uid:String = auth.uid!!
 
@@ -93,9 +95,10 @@ class tab_1 : Fragment() {
         noWaitingImage = view.findViewById(R.id.noWaitingImage)
         noWaiting = view.findViewById(R.id.noWaiting)
         joinQueueButton = view.findViewById(R.id.joinQueueButton)
+
+        tab_1_progressBar = view.findViewById(R.id.tab_1_progressBar)
         requestCamera()
         sharedPref = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
-
         queueID = sharedPref.getString("queueID", null)
         token = sharedPref.getInt("token", 0)
         Log.d(TAG, "onViewCreated() sharedPref $sharedPref queueID = $queueID")
@@ -132,10 +135,10 @@ class tab_1 : Fragment() {
             // on below line we are adding on click listener
             // for join Queue button in bottom sheet.
             joinQueue.setOnClickListener {
-
                 if (pasteQueueID.text.isEmpty()) {
                     Toast.makeText(requireActivity(),"Queue ID can not be empty",Toast.LENGTH_LONG).show()
                 } else {
+                    tab_1_progressBar.visibility = View.VISIBLE
                     queueID = pasteQueueID.text.toString()
                     updateData(true)
                     // on below line we are calling a dismiss
@@ -186,11 +189,14 @@ class tab_1 : Fragment() {
                 Log.d(TAG, "Value is: $value")
                 if (value == null) {
                     Toast.makeText(activity,"Incorrect Queue ID", Toast.LENGTH_LONG).show()
+                    tab_1_progressBar.visibility = View.GONE
                 } else if (newlyJoined && dataSnapshot.child("queueFull").value.toString().toBoolean()) {
+                    tab_1_progressBar.visibility = View.GONE
                     Toast.makeText(activity,"Sorry, Queue is Full", Toast.LENGTH_LONG).show()
                     // need to create an alert dialog box
                     // Toast message will not work
                     queueID = null
+                    myRef.removeEventListener(this)
                 } else {
                     val queueTitle = dataSnapshot.child("queueTitle").value.toString()
                     val averageTime:Int = dataSnapshot.child("averageTime").value.toString().toInt()
@@ -210,7 +216,7 @@ class tab_1 : Fragment() {
 
                         Log.d(TAG, "onDataChanged() newlyJoined sharedPref $sharedPref queueID $queueID")
                         inQueueUpdateUI()
-
+                        tab_1_progressBar.visibility = View.GONE
                         newlyJoined = false   // without this onDataChanged is called infinitely
                     }
                     val currToken:Int = dataSnapshot.child("currentToken").value.toString().toInt()
