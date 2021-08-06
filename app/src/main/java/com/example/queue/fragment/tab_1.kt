@@ -17,6 +17,8 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.queue.R
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -57,6 +59,9 @@ class tab_1 : Fragment() {
     lateinit var noWaitingImage:ImageView
     lateinit var noWaiting:TextView
     lateinit var joinQueueButton:Button
+
+    val auth = FirebaseAuth.getInstance()
+    val uid:String = auth.uid!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -198,6 +203,8 @@ class tab_1 : Fragment() {
                         myRef = database.getReference("queue/$queueID/totalToken")
                         myRef.setValue(totalToken)
                             token = totalToken
+                        myRef = database.getReference("queue/$queueID/client/${token}/uid")
+                        myRef.setValue(uid)
                         sharedPref.edit().putString("queueID",queueID).apply()
                         sharedPref.edit().putInt("token",token).apply()
 
