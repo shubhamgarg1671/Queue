@@ -15,6 +15,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -44,6 +48,28 @@ class yourQueueActivity : AppCompatActivity() {
             currentTokenView.text = (oldToken + 1).toString()
             val ref = database.getReference("queue/$queueID/currentToken")
             ref.setValue(oldToken + 1)
+            val queue = Volley.newRequestQueue(this)
+            val deviceToken = "fPQ6R2E5QiONjugWqujuZ5:APA91bFBNzyRks6HvZkaMY4hAtCtlKKPJyzNgJy6RR573mC0ETmciDQ0h2pLWwkLXVyiR_UesY-R1HT2AhPRFTTAYUi_ISuBqQntcqbOMBccq_dLE8UGGYSNPL7AcrE5a0j_uWHi8Q51"
+            val url = "https://queue-server.herokuapp.com/$deviceToken"
+
+            // Request a string response from the provided URL.
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    // Display the first 500 characters of the response string.
+                    //textView.text = "Response is: ${response.substring(0, 500)}"
+                    Toast.makeText(this,response,Toast.LENGTH_LONG).show()
+                    Log.d(TAG, "volley response = $response")
+                },
+                { error ->
+                    Toast.makeText(this,error.message,Toast.LENGTH_LONG).show()
+                    Log.e(TAG, "Volley error = $error")
+                //    textView.text = "That didn't work!"
+                })
+
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest)
+
         }
         val queueFull:Button = findViewById(R.id.queueFull)
         queueFull.setOnClickListener{
