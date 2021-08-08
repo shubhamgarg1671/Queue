@@ -178,7 +178,7 @@ class tab_1 : Fragment() {
         queueID = queueID?.replace("[", "")
         queueID = queueID?.replace("]", "")
 
-        var myRef = database.getReference("queue/$queueID")
+        var myRef = database.getReference("queue/$queueID/data")
 
         // Read from the database
         myRef.addValueEventListener(object : ValueEventListener {
@@ -206,7 +206,7 @@ class tab_1 : Fragment() {
                         totalToken++    // total tokens are incremented by one
                         yourToken.text =
                             totalToken.toString()  // last token is given to user who joined
-                        myRef = database.getReference("queue/$queueID/totalToken")
+                        myRef = database.getReference("queue/$queueID/data/totalToken")
                         myRef.setValue(totalToken)
                             token = totalToken
                         myRef = database.getReference("queue/$queueID/client/${token}/uid")

@@ -71,15 +71,15 @@ class tab_2 : Fragment() {
                 Toast.makeText(requireActivity(),"Unable to generate Queue ID",Toast.LENGTH_LONG).show()
             }
             val queueID:String = myRef.key!!
-            myRef = database.getReference("queue/$queueID/queueTitle")
+            myRef = database.getReference("queue/$queueID/data/queueTitle")
             myRef.setValue(queueTitile)
-            myRef = database.getReference("queue/$queueID/averageTime")
+            myRef = database.getReference("queue/$queueID/data/averageTime")
             myRef.setValue(averageTime)
-            myRef = database.getReference("queue/$queueID/totalToken")
+            myRef = database.getReference("queue/$queueID/data/totalToken")
             myRef.setValue(0)
-            myRef = database.getReference("queue/$queueID/currentToken")
+            myRef = database.getReference("queue/$queueID/data/currentToken")
             myRef.setValue(0)
-            myRef = database.getReference("queue/$queueID/queueFull")
+            myRef = database.getReference("queue/$queueID/data/queueFull")
             myRef.setValue(false)
 
 //            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!

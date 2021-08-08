@@ -71,19 +71,19 @@ class yourQueueActivity : AppCompatActivity() {
                 // whenever data at this location is updated.
                 val value = dataSnapshot.getValue()
                 Log.d(TAG, "Value is: $value")
-                val queueTitle = dataSnapshot.child("queueTitle").value.toString()
+                val queueTitle = dataSnapshot.child("data/queueTitle").value.toString()
                 val textViewQueueTitle:TextView = findViewById(R.id.textQueueTitle)
                 textViewQueueTitle.setText(queueTitle)
                 totalTokenInt =
-                    dataSnapshot.child("totalToken").value.toString().toInt()
+                    dataSnapshot.child("data/totalToken").value.toString().toInt()
                 totalTokanView.text = totalTokenInt.toString()
-                if (currToken != dataSnapshot.child("currentToken").value.toString().toInt()) {
+                if (currToken != dataSnapshot.child("data/currentToken").value.toString().toInt()) {
 
-                    currToken = dataSnapshot.child("currentToken").value.toString().toInt()
+                    currToken = dataSnapshot.child("data/currentToken").value.toString().toInt()
                     val clientUID = dataSnapshot.child("client/$currToken/uid").value.toString()
                     sendNotificationToClient(clientUID)
 
-                    currentTokenView.text = dataSnapshot.child("currentToken").value.toString()
+                    currentTokenView.text = dataSnapshot.child("data/currentToken").value.toString()
                 }
                 if (currToken == totalTokenInt) {
                     callNext.visibility = View.GONE
@@ -153,10 +153,8 @@ class yourQueueActivity : AppCompatActivity() {
                 val stringRequest = StringRequest(
                     Request.Method.GET, url,
                     { response ->
-                        // Display the first 500 characters of the response string.
-                        //textView.text = "Response is: ${response.substring(0, 500)}"
-                        Toast.makeText(this@yourQueueActivity,response,Toast.LENGTH_LONG).show()
                         Log.d(TAG, "volley response = $response")
+                        Toast.makeText(this@yourQueueActivity,response,Toast.LENGTH_LONG).show()
                     },
                     { error ->
                         Log.e(TAG, "Volley error = $error")
