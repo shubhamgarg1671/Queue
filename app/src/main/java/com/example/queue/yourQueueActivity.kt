@@ -48,7 +48,7 @@ class yourQueueActivity : AppCompatActivity() {
         callNext.setOnClickListener {
             val oldToken:Int = currentTokenView.text.toString().toInt()
             currentTokenView.text = (oldToken + 1).toString()
-            val ref = database.getReference("queue/$queueID/currentToken")
+            val ref = database.getReference("queue/$queueID/data/currentToken")
             ref.setValue(oldToken + 1)
         }
         val queueFull:Button = findViewById(R.id.queueFull)
@@ -56,11 +56,11 @@ class yourQueueActivity : AppCompatActivity() {
             Log.d(TAG, "queueFull clicked")
             if (queueFull.text == "Queue Full") {
                 queueFull.text = "Allow more"    // Botton status will be apposite to that in database
-                val ref = database.getReference("queue/$queueID/queueFull")
+                val ref = database.getReference("queue/$queueID/data/queueFull")
                 ref.setValue(true)
             } else {
                 queueFull.text = "Queue Full"   // Botton status will be apposite to that in database
-                val ref = database.getReference("queue/$queueID/queueFull")
+                val ref = database.getReference("queue/$queueID/data/queueFull")
                 ref.setValue(false)
             }
         }
@@ -140,8 +140,7 @@ class yourQueueActivity : AppCompatActivity() {
         val myRef = database.getReference("user/$clientUID")
         // Read from the database
         myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
+            override fun onDataChange(dataSnapshot: DataSnapshot) { // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 val value = dataSnapshot.getValue()
                 Log.d(TAG, "Value is: $value")

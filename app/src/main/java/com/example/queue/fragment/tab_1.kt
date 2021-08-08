@@ -168,16 +168,18 @@ class tab_1 : Fragment() {
 
         Log.d(TAG, "updateData() called with: newlyJoined = $newlyJoined and queueID $queueID")
         var newlyJoined = newlyJoined   // Don't know why but without this newlyJoined is val so I can not change it's value
-        //database reference
 
         // so that we can have a valid
         // firebase path removing special characters
+        // you can also try check if these characters are
+        // present in queue ID and say that queue is incorrect
         queueID = queueID?.replace(".", "")
         queueID = queueID?.replace("#", "")
         queueID = queueID?.replace("$", "")
         queueID = queueID?.replace("[", "")
         queueID = queueID?.replace("]", "")
 
+        //database reference
         var myRef = database.getReference("queue/$queueID/data")
 
         // Read from the database
