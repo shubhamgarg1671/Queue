@@ -29,7 +29,6 @@ import com.google.zxing.qrcode.QRCodeWriter
 
 class yourQueueActivity : AppCompatActivity() {
     val database = FirebaseDatabase.getInstance()
-//    val deviceToken:String = "fPQ6R2E5QiONjugWqujuZ5:APA91bFBNzyRks6HvZkaMY4hAtCtlKKPJyzNgJy6RR573mC0ETmciDQ0h2pLWwkLXVyiR_UesY-R1HT2AhPRFTTAYUi_ISuBqQntcqbOMBccq_dLE8UGGYSNPL7AcrE5a0j_uWHi8Q51"
 
     var queueID: String = ""
     var currToken:Int = 0

@@ -128,7 +128,13 @@ class tab_1 : Fragment() {
                     joinQueue.performClick()
                 }
             }
-            codeScanner.startPreview()
+            if (ActivityCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                codeScanner.startPreview()
+            }
 
             // on below line we are creating a variable for our button
             // which is in the bottom sheet.
