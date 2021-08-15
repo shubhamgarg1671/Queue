@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/my_button"
         android:padding="10dp"
-        android:text="Queue Full"
+        android:text="@string/mark_as_full"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
