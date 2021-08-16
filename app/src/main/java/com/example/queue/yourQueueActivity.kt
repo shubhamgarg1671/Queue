@@ -40,7 +40,6 @@ class yourQueueActivity : AppCompatActivity() {
         queueID = intent.getStringExtra(EXTRA_MESSAGE)!!
         val currentTokenView:TextView = findViewById(R.id.cuurentTokenYourQueue)
         val totalTokanView:TextView = findViewById(R.id.totalToken)
-        copyToClipBoard(queueID)
         val myRef = database.getReference("queue/$queueID")
 
         val callNext:Button = findViewById(R.id.callNext)
