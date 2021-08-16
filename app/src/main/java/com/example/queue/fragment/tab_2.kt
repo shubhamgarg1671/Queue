@@ -11,6 +11,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.queue.R
 import com.example.queue.yourQueueActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -88,6 +92,19 @@ class tab_2 : Fragment() {
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)
             }
+            val queue = Volley.newRequestQueue(requireActivity())
+            val url = "https://queue-server.herokuapp.com/"
+
+            val stringRequest = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    Log.d(TAG, "API call success with : response = $response")
+                },
+                {error ->
+                    Log.d(TAG, "API call failed with: error = $error")
+                    Toast.makeText(requireActivity(), "Notification not working", Toast.LENGTH_SHORT).show()
+                })
+            queue.add(stringRequest)
             startActivity(intent)
         }
     }
