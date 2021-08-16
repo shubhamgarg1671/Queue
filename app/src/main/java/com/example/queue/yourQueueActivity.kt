@@ -53,12 +53,12 @@ class yourQueueActivity : AppCompatActivity() {
         val queueFull:Button = findViewById(R.id.queueFull)
         queueFull.setOnClickListener{
             Log.d(TAG, "queueFull clicked")
-            if (queueFull.text == "Queue Full") {
-                queueFull.text = "Allow more"    // Botton status will be apposite to that in database
+            if (queueFull.text == "Mark as Full") {
+                queueFull.text = getString(R.string.allow_more)    // Button status will be apposite to that in database
                 val ref = database.getReference("queue/$queueID/data/queueFull")
                 ref.setValue(true)
             } else {
-                queueFull.text = "Queue Full"   // Botton status will be apposite to that in database
+                queueFull.text = getString(R.string.mark_as_full)   // Botton status will be apposite to that in database
                 val ref = database.getReference("queue/$queueID/data/queueFull")
                 ref.setValue(false)
             }
