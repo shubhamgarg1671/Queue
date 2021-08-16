@@ -88,7 +88,6 @@ class tab_2 : Fragment() {
 
 //            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!
 
-
             val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, queueID)
             }
