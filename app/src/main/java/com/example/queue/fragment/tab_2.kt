@@ -1,6 +1,10 @@
 package com.example.queue.fragment
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.util.Log
@@ -61,50 +65,89 @@ class tab_2 : Fragment() {
 
         val createQueueButton:Button = view.findViewById(R.id.createQueueButton)
         createQueueButton.setOnClickListener {
-            val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
-            var averageTime:Int? = view.findViewById<EditText>(R.id.averageTime).text.toString().toIntOrNull()
-            Log.d(TAG, "createQueueButton clicked with averageTime $averageTime and queueTitile $queueTitile")
+            val sharedPref: SharedPreferences = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
+            if (sharedPref.getString("queueID", null) != null) {
+                // Create the object of
+                // AlertDialog Builder class
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+                builder.setMessage("First leave the queue you have joined")
+                builder.setTitle("First, leave Queue")
+                // Set Cancelable false
+                // for when the user clicks on the outside
+                // the Dialog Box then it will remain show
+                builder.setCancelable(false)
+                //ok button to remove dialog
+                builder
+                    .setPositiveButton(
+                        "ok"
+                    ) { dialog, which ->
+                        Log.d(TAG, "onViewCreated() called with: dialog = $dialog, _ = $which")
+                        dialog.cancel()
+                    }
+                // Create the Alert dialog
+                val alertDialog: AlertDialog = builder.create()
+                // Show the Alert Dialog box
+                alertDialog.show()
+            } else {
 
-            if (averageTime == null) {
-                averageTime = 2
+
+                val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
+                var averageTime: Int? =
+                    view.findViewById<EditText>(R.id.averageTime).text.toString().toIntOrNull()
+                Log.d(
+                    TAG,
+                    "createQueueButton clicked with averageTime $averageTime and queueTitile $queueTitile"
+                )
+
+                if (averageTime == null) {
+                    averageTime = 2
+                }
+
+                var myRef = database.getReference("queue")
+                myRef = myRef.push()
+                if (myRef.key == null) {
+                    Toast.makeText(
+                        requireActivity(),
+                        "Unable to generate Queue ID",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                val queueID: String = myRef.key!!
+                myRef = database.getReference("queue/$queueID/data/queueTitle")
+                myRef.setValue(queueTitile)
+                myRef = database.getReference("queue/$queueID/data/averageTime")
+                myRef.setValue(averageTime)
+                myRef = database.getReference("queue/$queueID/data/totalToken")
+                myRef.setValue(0)
+                myRef = database.getReference("queue/$queueID/data/currentToken")
+                myRef.setValue(0)
+                myRef = database.getReference("queue/$queueID/data/queueFull")
+                myRef.setValue(false)
+
+                //            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!
+
+                val intent: Intent = Intent(activity, yourQueueActivity::class.java).apply {
+                    putExtra(EXTRA_MESSAGE, queueID)
+                }
+                val queue = Volley.newRequestQueue(requireActivity())
+                val url = "https://queue-server.herokuapp.com/"
+
+                val stringRequest = StringRequest(
+                    Request.Method.GET, url,
+                    { response ->
+                        Log.d(TAG, "API call success with : response = $response")
+                    },
+                    { error ->
+                        Log.d(TAG, "API call failed with: error = $error")
+                        Toast.makeText(
+                            requireActivity(),
+                            "Notification not working",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+                queue.add(stringRequest)
+                startActivity(intent)
             }
-
-            var myRef = database.getReference("queue")
-            myRef = myRef.push()
-            if (myRef.key == null) {
-                Toast.makeText(requireActivity(),"Unable to generate Queue ID",Toast.LENGTH_LONG).show()
-            }
-            val queueID:String = myRef.key!!
-            myRef = database.getReference("queue/$queueID/data/queueTitle")
-            myRef.setValue(queueTitile)
-            myRef = database.getReference("queue/$queueID/data/averageTime")
-            myRef.setValue(averageTime)
-            myRef = database.getReference("queue/$queueID/data/totalToken")
-            myRef.setValue(0)
-            myRef = database.getReference("queue/$queueID/data/currentToken")
-            myRef.setValue(0)
-            myRef = database.getReference("queue/$queueID/data/queueFull")
-            myRef.setValue(false)
-
-//            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!
-
-            val intent:Intent = Intent(activity,yourQueueActivity::class.java).apply {
-                putExtra(EXTRA_MESSAGE, queueID)
-            }
-            val queue = Volley.newRequestQueue(requireActivity())
-            val url = "https://queue-server.herokuapp.com/"
-
-            val stringRequest = StringRequest(
-                Request.Method.GET, url,
-                { response ->
-                    Log.d(TAG, "API call success with : response = $response")
-                },
-                {error ->
-                    Log.d(TAG, "API call failed with: error = $error")
-                    Toast.makeText(requireActivity(), "Notification not working", Toast.LENGTH_SHORT).show()
-                })
-            queue.add(stringRequest)
-            startActivity(intent)
         }
     }
 
