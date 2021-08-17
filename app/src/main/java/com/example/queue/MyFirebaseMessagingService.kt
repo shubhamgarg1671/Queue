@@ -1,6 +1,6 @@
 package com.example.queue
 
-import android.R
+import android.R.mipmap
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,7 +10,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-
 
 class MyFirebaseMessagingService :FirebaseMessagingService() {
     val TAG = "MyFirebaseMessagingServ"
@@ -23,7 +22,7 @@ class MyFirebaseMessagingService :FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         val channelId = "Default"
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(R.mipmap.sym_def_app_icon)
+            .setSmallIcon(mipmap.sym_def_app_icon)
             .setContentTitle(remoteMessage.notification!!.title)
             .setContentText(remoteMessage.notification!!.body).setAutoCancel(true)
             .setContentIntent(pendingIntent)
