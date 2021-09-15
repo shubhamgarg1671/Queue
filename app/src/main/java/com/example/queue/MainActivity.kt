@@ -1,19 +1,12 @@
 package com.example.queue
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.viewpager.widget.ViewPager
-import com.example.queue.adapter.viewPagerAdapter
-import com.google.android.material.tabs.TabItem
-import com.google.android.material.tabs.TabLayout
-import com.google.firebase.auth.FirebaseAuth
-import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
     val TAG = "MainActivity"
@@ -29,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         drawer.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)

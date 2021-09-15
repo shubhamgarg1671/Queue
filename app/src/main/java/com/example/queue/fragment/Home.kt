@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.viewpager.widget.ViewPager
 import com.example.queue.R
 import com.example.queue.adapter.viewPagerAdapter
@@ -72,6 +73,23 @@ class Home : Fragment() {
                 Log.d(TAG, "onTabUnselected() called with: tab = $tab")
             }
         })
+
+        // onBackPressed for fragment
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    Log.d(TAG, "Fragment back pressed invoked")
+                    // Do custom work here
+
+                    // if you want onBackPressed() to be called as normal afterwards
+                    if (isEnabled) {
+                        isEnabled = false
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
+            )
     }
 
     companion object {
