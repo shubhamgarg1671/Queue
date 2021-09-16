@@ -22,12 +22,21 @@
             android:background="?attr/colorPrimary">
         </androidx.appcompat.widget.Toolbar>
 
-        <fragment
+
+        <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+        <androidx.fragment.app.FragmentContainerView
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:id="@+id/nav_host_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/navhostfragment"
-            android:name="com.example.queue.fragment.Home"
-            app:defaultNavHost="true"/>
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation" />
+<!--        <fragment-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:id="@+id/navhostfragment"-->
+<!--            android:name="com.example.queue.fragment.Home"-->
+<!--            app:defaultNavHost="true" />-->
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
@@ -37,5 +46,5 @@
         android:background="@color/white"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/navigation_bar_menu"/>
+        app:menu="@menu/navigation_bar_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
