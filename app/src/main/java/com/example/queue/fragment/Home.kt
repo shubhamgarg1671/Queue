@@ -46,11 +46,12 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d(TAG, "onViewCreated() called with: view = $view, savedInstanceState = $savedInstanceState")
         val viewPager = view.findViewById<ViewPager>(R.id.viewPager);
-        val viewPagerAdapter = viewPagerAdapter(
+        val viewPagerTabAdapter = viewPagerAdapter(
             parentFragmentManager
         )
-        viewPager.adapter = viewPagerAdapter;
+        viewPager.adapter = viewPagerTabAdapter;
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
         // It is used to join TabLayout with ViewPager.
         tabLayout.setupWithViewPager(viewPager)
