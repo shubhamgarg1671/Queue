@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This app is Developed by Shubham Garg.\nFor any Queries/feedback feel free to contact"
+        android:text="This app is Developed by Shubham Garg.\nFor any Queries/feedback feel free to contact at \n shubhamgarg1671@gmail.com"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
