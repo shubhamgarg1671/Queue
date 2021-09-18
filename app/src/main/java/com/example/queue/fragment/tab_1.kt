@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.queue.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -157,6 +159,21 @@ class tab_1 : Fragment() {
             // content view to our bottomSheetView.
             dialog.setContentView(bottomSheetView)
 
+            // auto expand bottom sheet to full screen
+            //https://www.codegrepper.com/code-examples/whatever/how+to+make+bottom+sheet+full+screen
+            dialog.setOnShowListener {
+                val bottomSheetDialog = it as BottomSheetDialog
+                val parentLayout =
+                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                parentLayout?.let { it ->
+                    val behaviour = BottomSheetBehavior.from(it)
+                    val layoutParams = it.layoutParams
+                    layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
+                    it.layoutParams = layoutParams
+                    behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+
             // on below line we are calling
             // a show method to display a dialog.
             dialog.show()
@@ -169,6 +186,7 @@ class tab_1 : Fragment() {
                 sharedPref.edit().putString("queueID",null).apply()
         }
     }
+
 
     private fun updateData(newlyJoined:Boolean) {
 
