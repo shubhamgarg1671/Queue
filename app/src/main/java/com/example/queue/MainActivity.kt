@@ -3,6 +3,7 @@ package com.example.queue
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -15,6 +16,7 @@ import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     val TAG = "MainActivity"
+    var currentlyAtHome:Boolean = true
     lateinit var drawer:DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +31,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val sideNavigationView = findViewById<NavigationView>(R.id.navigationView)
         sideNavigationView.setNavigationItemSelectedListener(this)
-
-//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            toolbar.setTitle(R.string._91)
-//        }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected() called with: item = $item")
@@ -55,12 +52,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     setReorderingAllowed(true)
                     replace<Home>(R.id.nav_host_fragment)
                 }
+                currentlyAtHome = true
             }
             R.id.nav_about -> {
                 supportFragmentManager.commit {
                     setReorderingAllowed(true)
                     replace<About>(R.id.nav_host_fragment)
                 }
+                currentlyAtHome = false
                 Log.d(TAG, "onNavigationItemSelected() called with: item = ${item.itemId} about")
             }
         }
@@ -72,7 +71,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if (currentlyAtHome) {
+                super.onBackPressed()
+            } else {
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace<Home>(R.id.nav_host_fragment)
+                }
+                currentlyAtHome = true
+            }
         }
     }
 }
