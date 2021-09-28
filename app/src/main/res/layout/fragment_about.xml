@@ -3,10 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragment.About">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Queue is a virtual queue manegment app" />
+        android:text="About Page"
+        android:layout_margin="20dp"
+        android:textSize="30sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="The queue is a queue management system that allows businesses to handle customer queues intelligently and quickly.\n\n
+The queue is a contactless cloud-based online queue management system that helps businesses to upgrade their customer experience and manage queues intelligently. It allows your customers to generate their queue token number themselves by just scanning a QR code and provide them their expected waiting time along with real-time queue status and Alert them of their turn via push notifications. Now, there is no need for any client standing in a queue.
+Benefits:
+\n1. Reduces Crowd At Your Place
+\n2. Upgrade your customer experience
+\n3. Customers do not need to waste their time standing there in the queue, meanwhile, they can finish some of their other work or can comfortably wait at the place where they are comfortable.
+\n4. Customers can generate their queue token number and become a part of the ongoing virtual queue.
+\n5. Customers get the real-time status of the queue and their expected waiting time.
+\n\nHow It Works:
+\n1. Both customers and sellers need to install the Queue app on their Android phones from the play store.
+\n2. Shopkeeper will have to create a virtual queue and share the generated QR code with customers.
+\n3. Customer will scan the QR code to join.
+\n4. Shopkeepers just need to tap the call next button to call clients one by one.
+\n5. Customers will be notified via push notifications.\n"
+        android:layout_margin="5dp" />
+    </ScrollView>
 </LinearLayout>
