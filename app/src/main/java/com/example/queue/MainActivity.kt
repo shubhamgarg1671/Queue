@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.*
 import com.example.queue.fragment.About
 import com.example.queue.fragment.Home
+import com.example.queue.fragment.feedback
 import com.google.android.material.navigation.NavigationView
 
 
@@ -61,6 +62,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 currentlyAtHome = false
                 Log.d(TAG, "onNavigationItemSelected() called with: item = ${item.itemId} about")
+            }
+            R.id.nav_feedback -> {
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace<feedback>(R.id.nav_host_fragment)
+                }
+                currentlyAtHome = false
             }
         }
         //close navigation drawer
