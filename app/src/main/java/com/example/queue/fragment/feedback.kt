@@ -2,14 +2,21 @@ package com.example.queue.fragment
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.android.volley.VolleyLog
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.queue.R
+import org.json.JSONException
+import org.json.JSONObject
+import java.net.URL
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,6 +63,27 @@ class feedback : Fragment() {
             contactFormtitle.visibility = View.GONE
             val contactFormSubmitted: TextView = view.findViewById(R.id.contact_form_Submitted)
             contactFormSubmitted.visibility = View.VISIBLE
+
+            val queue = Volley.newRequestQueue(requireActivity())
+            val url = URL("https://queue-server.herokuapp.com/email")
+            val body:JSONObject = JSONObject()
+            body.put("name",name)
+            body.put("email",email)
+            body.put("phone",phone)
+            body.put("message",message)
+
+            val req = JsonObjectRequest(url.toString(), body,
+                { response ->
+                    try {
+                        VolleyLog.v("Response:%n %s", response.toString(4))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+            ) { error -> VolleyLog.e("Error: ", error.message) }
+            // Add the request to the RequestQueue.
+            queue.add(req)
+
         }
     }
 
