@@ -1,7 +1,11 @@
 package com.example.queue.fragment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,40 +57,68 @@ class feedback : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val submitButton: Button = view.findViewById(R.id.feedback_submit)
         submitButton.setOnClickListener {
-            val name:String = view.findViewById<EditText>(R.id.feedback_name).text.toString()
-            val email:String = view.findViewById<EditText>(R.id.feedback_email).text.toString()
-            val phone:String = view.findViewById<EditText>(R.id.feedback_phone).text.toString()
-            val message:String = view.findViewById<EditText>(R.id.feedback_message).text.toString()
-            Log.d("TAG", name + email+phone+message);
-            submitButton.visibility = View.GONE
-            val contactFormtitle: TextView = view.findViewById(R.id.contact_form_title)
-            contactFormtitle.visibility = View.GONE
-            val contactFormSubmitted: TextView = view.findViewById(R.id.contact_form_Submitted)
-            contactFormSubmitted.visibility = View.VISIBLE
+            val email = view.findViewById<EditText>(R.id.feedback_email).text.toString()
+            if (isValidEmail(email)) {
+                val name:String = view.findViewById<EditText>(R.id.feedback_name).text.toString()
+                val phone:String = view.findViewById<EditText>(R.id.feedback_phone).text.toString()
+                val message:String = view.findViewById<EditText>(R.id.feedback_message).text.toString()
+                Log.d("TAG", name + email+phone+message);
+                submitButton.visibility = View.GONE
+                val contactFormtitle: TextView = view.findViewById(R.id.contact_form_title)
+                contactFormtitle.visibility = View.GONE
+                val contactFormSubmitted: TextView = view.findViewById(R.id.contact_form_Submitted)
+                contactFormSubmitted.visibility = View.VISIBLE
 
-            val queue = Volley.newRequestQueue(requireActivity())
-            val url = URL("https://queue-server.herokuapp.com/email")
-            val body:JSONObject = JSONObject()
-            body.put("name",name)
-            body.put("email",email)
-            body.put("phone",phone)
-            body.put("message",message)
+                val queue = Volley.newRequestQueue(requireActivity())
+                val url = URL("https://queue-server.herokuapp.com/email")
+                val body:JSONObject = JSONObject()
+                body.put("name",name)
+                body.put("email",email)
+                body.put("phone",phone)
+                body.put("message",message)
 
-            val req = JsonObjectRequest(url.toString(), body,
-                { response ->
-                    try {
-                        VolleyLog.v("Response:%n %s", response.toString(4))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
+                val req = JsonObjectRequest(url.toString(), body,
+                    { response ->
+                        try {
+                            VolleyLog.v("Response:%n %s", response.toString(4))
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
                     }
-                }
-            ) { error -> VolleyLog.e("Error: ", error.message) }
-            // Add the request to the RequestQueue.
-            queue.add(req)
+                ) { error -> VolleyLog.e("Error: ", error.message) }
+                // Add the request to the RequestQueue.
+                queue.add(req)
 
+            } else {
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+                builder.setMessage("Please Enter a Valid Email Address")
+                builder.setTitle("Invalid Email")
+                // Set Cancelable false
+                // for when the user clicks on the outside
+                // the Dialog Box then it will remain show
+                builder.setCancelable(true)
+                //ok button to remove dialog
+                builder
+                    .setPositiveButton(
+                        "ok"
+                    ) { dialog, which ->
+                        dialog.cancel()
+                    }
+                // Create the Alert dialog
+                val alertDialog: AlertDialog = builder.create()
+                // Show the Alert Dialog box
+                alertDialog.show()
+            }
         }
     }
 
+    fun isValidEmail(target: CharSequence?): Boolean {
+        return if (TextUtils.isEmpty(target)) {
+            false
+        } else {
+            Patterns.EMAIL_ADDRESS.matcher(target!!).matches()
+        }
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
