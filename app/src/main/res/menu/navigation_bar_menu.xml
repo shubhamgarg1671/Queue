@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <group>
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/ic_baseline_home_24"
             android:title="Home"/>
         <item
             android:id="@+id/nav_about"
+            android:icon="@drawable/ic_twotone_info_24"
             android:title="About"/>
         <item
             android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_twotone_feedback_24"
             android:title="Feedback/Complaint"/>
+        </group>
 
 </menu>
