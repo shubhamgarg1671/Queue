@@ -66,40 +66,19 @@ class tab_2 : Fragment() {
 
         val createQueueButton:Button = view.findViewById(R.id.createQueueButton)
         createQueueButton.setOnClickListener {
+            var message:String = "Something went wrong";
             val sharedPref: SharedPreferences = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
+            val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
+
             if (sharedPref.getString("queueID", null) != null) {
-                // Create the object of
-                // AlertDialog Builder class
-                val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-                builder.setMessage("First leave the queue you have joined")
-                builder.setTitle("First, leave Queue")
-                // Set Cancelable false
-                // for when the user clicks on the outside
-                // the Dialog Box then it will remain show
-                builder.setCancelable(false)
-                //ok button to remove dialog
-                builder
-                    .setPositiveButton(
-                        "ok"
-                    ) { dialog, which ->
-                        Log.d(TAG, "onViewCreated() called with: dialog = $dialog, _ = $which")
-                        dialog.cancel()
-                    }
-                // Create the Alert dialog
-                val alertDialog: AlertDialog = builder.create()
-                // Show the Alert Dialog box
-                alertDialog.show()
+                message = "First leave the queue you have joined"
+                showAlertBox(message);
+            } else if (queueTitile.isEmpty()) {
+                message = "queueTitle can not be empty"
+                showAlertBox(message);
             } else {
-
-
-                val queueTitile = view.findViewById<EditText>(R.id.queueTitile).text.toString()
                 var averageTime: Int? =
                     view.findViewById<EditText>(R.id.averageTime).text.toString().toIntOrNull()
-                Log.d(
-                    TAG,
-                    "createQueueButton clicked with averageTime $averageTime and queueTitile $queueTitile"
-                )
-
                 if (averageTime == null) {
                     averageTime = 2
                 }
@@ -125,7 +104,6 @@ class tab_2 : Fragment() {
                 myRef = database.getReference("queue/$queueID/data/queueFull")
                 myRef.setValue(false)
 
-                //            val sharedPref = activity?.getSharedPreferences("yourQueue", Context.MODE_PRIVATE)!!
 
                 val intent: Intent = Intent(activity, yourQueueActivity::class.java).apply {
                     putExtra(EXTRA_MESSAGE, queueID)
@@ -136,7 +114,7 @@ class tab_2 : Fragment() {
                 val stringRequest = StringRequest(
                     Request.Method.GET, url,
                     { response ->
-                        Log.d(TAG, "API call success with : response = $response")
+
                     },
                     { error ->
                         Log.d(TAG, "API call failed with: error = $error")
@@ -150,6 +128,30 @@ class tab_2 : Fragment() {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun showAlertBox(message: String) {
+        // Create the object of
+        // AlertDialog Builder class
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+        builder.setMessage(message)
+        builder.setTitle("Alert")
+        // Set Cancelable false
+        // for when the user clicks on the outside
+        // the Dialog Box then it will remain show
+        builder.setCancelable(false)
+        //ok button to remove dialog
+        builder
+            .setPositiveButton(
+                "ok"
+            ) { dialog, which ->
+                Log.d(TAG, "onViewCreated() called with: dialog = $dialog, _ = $which")
+                dialog.cancel()
+            }
+        // Create the Alert dialog
+        val alertDialog: AlertDialog = builder.create()
+        // Show the Alert Dialog box
+        alertDialog.show()
     }
 
     companion object {
