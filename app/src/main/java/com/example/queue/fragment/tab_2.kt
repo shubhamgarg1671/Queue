@@ -73,8 +73,8 @@ class tab_2 : Fragment() {
             if (sharedPref.getString("queueID", null) != null) {
                 message = "First leave the queue you have joined"
                 showAlertBox(message);
-            } else if (queueTitile.isEmpty()) {
-                message = "queueTitle can not be empty"
+            } else if (queueTitile.length < 5) {
+                message = "Too short QueueTitle"
                 showAlertBox(message);
             } else {
                 var averageTime: Int? =
@@ -104,13 +104,13 @@ class tab_2 : Fragment() {
                 myRef = database.getReference("queue/$queueID/data/queueFull")
                 myRef.setValue(false)
 
-
                 val intent: Intent = Intent(activity, yourQueueActivity::class.java).apply {
                     putExtra(EXTRA_MESSAGE, queueID)
                 }
-                val queue = Volley.newRequestQueue(requireActivity())
-                val url = "https://queue-server.herokuapp.com/"
 
+                val queue = Volley.newRequestQueue(requireActivity())
+                // this was an extra api call just to awake heroku server
+                val url = "https://queue-server.herokuapp.com/"
                 val stringRequest = StringRequest(
                     Request.Method.GET, url,
                     { response ->
@@ -125,6 +125,8 @@ class tab_2 : Fragment() {
                         ).show()
                     })
                 queue.add(stringRequest)
+                sharedPref.edit().putString("myQueueID",queueID).apply()
+
                 startActivity(intent)
             }
         }

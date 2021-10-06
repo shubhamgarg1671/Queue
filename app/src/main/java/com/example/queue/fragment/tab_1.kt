@@ -1,10 +1,15 @@
 package com.example.queue.fragment
 
 import android.Manifest
+import androidx.appcompat.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.AlarmClock
+import android.provider.AlarmClock.EXTRA_MESSAGE
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +22,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.example.queue.R
+import com.example.queue.yourQueueActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
@@ -101,9 +107,47 @@ class tab_1 : Fragment() {
         tab_1_progressBar = view.findViewById(R.id.tab_1_progressBar)
         requestCamera()
         sharedPref = activity?.getSharedPreferences("tab_1", Context.MODE_PRIVATE)!!
+
+        val myQueueID = sharedPref.getString("myQueueID", null)
+        if (myQueueID != null) {
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
+            builder.setMessage("Do you want to continue your queue you left")
+            builder.setTitle("Reminder")
+            // Set Cancelable false
+            // for when the user clicks on the outside
+            // the Dialog Box then it will remain show
+            builder.setCancelable(false)
+            // Set the positive button with yes name
+            // OnClickListener method is use of
+            // DialogInterface interface.
+            builder
+                .setPositiveButton(
+                    "Yes",
+                    DialogInterface.OnClickListener { dialog, which -> // When the user click yes button
+                        // then scanBarcode activity
+                        val intent: Intent = Intent(activity, yourQueueActivity::class.java).apply {
+                            putExtra(EXTRA_MESSAGE, myQueueID)
+                        }
+                        startActivity(intent)
+                    })
+            // Set the Negative button with No name
+            // OnClickListener method is use
+            // of DialogInterface interface.
+            builder
+                .setNegativeButton(
+                    "No",
+                    DialogInterface.OnClickListener { dialog, which -> // If user click no
+                        sharedPref.edit().putString("myQueueID",null).apply()
+
+                        dialog.cancel()
+                    })
+            // Create the Alert dialog
+            val alertDialog: AlertDialog = builder.create()
+            // Show the Alert Dialog box
+            alertDialog.show()
+        }
         queueID = sharedPref.getString("queueID", null)
         token = sharedPref.getInt("token", 0)
-        Log.d(TAG, "onViewCreated() sharedPref $sharedPref queueID = $queueID")
 
         if (queueID != null) {
             inQueueUpdateUI()
@@ -240,7 +284,6 @@ class tab_1 : Fragment() {
                         sharedPref.edit().putString("queueID",queueID).apply()
                         sharedPref.edit().putInt("token",token).apply()
 
-                        Log.d(TAG, "onDataChanged() newlyJoined sharedPref $sharedPref queueID $queueID")
                         inQueueUpdateUI()
                         tab_1_progressBar.visibility = View.GONE
                         newlyJoined = false   // without this onDataChanged is called infinitely
