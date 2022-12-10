@@ -109,8 +109,8 @@ class tab_2 : Fragment() {
                 }
 
                 val queue = Volley.newRequestQueue(requireActivity())
-                // this was an extra api call just to awake heroku server
-                val url = "https://queue-server.herokuapp.com/"
+                // this was an extra api call just to check if server working
+                val url = "https://cute-erin-seal-gear.cyclic.app/"
                 val stringRequest = StringRequest(
                     Request.Method.GET, url,
                     { response ->

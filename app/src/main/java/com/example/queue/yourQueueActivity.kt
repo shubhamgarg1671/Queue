@@ -144,7 +144,7 @@ class yourQueueActivity : AppCompatActivity() {
                 Log.d(TAG, "Value is: $value")
                 val clientContact = dataSnapshot.child("contact").value.toString()
                 val clientDeviceToken = dataSnapshot.child("deviceToken").value.toString()
-                val url = "https://queue-server.herokuapp.com/$clientDeviceToken"
+                val url = "https://cute-erin-seal-gear.cyclic.app//$clientDeviceToken"
 
                 // Request a string response from the provided URL.
                 val stringRequest = StringRequest(

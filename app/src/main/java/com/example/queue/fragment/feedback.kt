@@ -70,7 +70,7 @@ class feedback : Fragment() {
                 contactFormSubmitted.visibility = View.VISIBLE
 
                 val queue = Volley.newRequestQueue(requireActivity())
-                val url = URL("https://queue-server.herokuapp.com/email")
+                val url = URL("https://cute-erin-seal-gear.cyclic.app/email")
                 val body:JSONObject = JSONObject()
                 body.put("name",name)
                 body.put("email",email)
